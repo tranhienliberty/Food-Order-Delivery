@@ -1,0 +1,76 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="card col-md-5 mr-3">
+            <h4 class="text-center pt-2">Today's Total Revenue</h4>
+            <h1 class="text-center" style="color: green;">${{total_revenue}}</h1>
+        </div>
+
+        <div class="card col-md-5 mr-3">
+            <h4 class="text-center pt-2">Today's Total Order</h4>
+            <h1 class="text-center" style="color: red;">${{total_orders}}</h1>
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-12 mt-5">
+            <table class="table table-hover table-stripped">
+                <thead>
+                    <tr>
+                        <th scope="col">Order ID</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Street</th>
+                        <th scope="col">Ward</th>
+                        <th scope="col">District</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Is Paid?</th>
+                        <th scope="col">Detail</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <th scope="row"> {{order.pk}}</th>
+                        <td>{{order.price}}</td>
+                        <td>{{order.name}}</td>
+                        <td>{{order.email}}</td>
+                        <td>{{order.street}}</td>
+                        <td>{{order.ward}}</td>
+                        <td>{{order.district}}</td>
+                        <td>{{order.city}}</td>
+                        <td>
+                            {% if order.is_paid %}
+                            <i style="color:green;" class="fas fa-check"></i>
+                            {% else %}
+                            <i style="color:red;" class="fas fa-times"></i>
+                            {% endif %}
+                        </td>
+                        <td><a href="{% url 'order-detail' order.pk %}"><i class="far fa-edit"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col">
+            {% load i18n %}
+            {% block head_title %}
+            <form method="post" action="{% url 'account_logout' %}">
+                {% csrf_token %}
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+                <button type="submit" class="btn btn-outline-dark">{% trans 'Sign Out' %}</button>
+            </form>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
